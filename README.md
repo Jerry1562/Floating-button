@@ -1,4 +1,5 @@
 # menu-float
+vue实现的菜单控件，可拖动，通过点击控件收起或展开菜单
 
 ## Project setup
 ```
