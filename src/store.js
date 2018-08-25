@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     positionX:0,      //记录document的位置信息
     positionY:0,
-    isDown:false,
-    isOpen:false,
+    isDown:false,     //记录鼠标状态
+    isOpen:false      //控制菜单展开关闭
   },
   mutations: {
     update(state,payload){

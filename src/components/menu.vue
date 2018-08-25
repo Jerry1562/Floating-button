@@ -28,8 +28,6 @@ export default {
             /* 初始位置 */
             init_x:0,
             init_y:0,
-            /* 记录展开状态 */
-            isOpen:true
         }
     },
     methods:{
@@ -41,7 +39,8 @@ export default {
                 });
             this.$store.commit('isDown',{
                 isDown:true
-            });    
+            });
+            /* 记录鼠标位置和控件左上角的距离 */    
             this.old_x = e.clientX - main.offsetLeft;
             this.old_y = e.clientY - main.offsetTop;
             /* 保存初始位置 */
@@ -50,6 +49,8 @@ export default {
         },
         move(e){
             e.preventDefault();
+            e.stopPropagation();
+            /* 如果鼠标在按下的状态，就让控件随鼠标移动 */
             if(this.$store.state.isDown){
             this.$store.commit('update',{
                 x:e.clientX,
@@ -58,15 +59,19 @@ export default {
             }
         },
         up(e){
+            e.stopPropagation();
             let main = e.target;
             this.$store.commit('isDown',{
                 isDown:false
             });
+            /* 如果没有移动则是点击行为 */
             if(main.offsetLeft == this.init_x&&main.offsetTop == this.init_y){
-                this.$store.commit('isOpen',{
-                    isOpen:this.isOpen
+                this.$store.commit('syncOpen',{
+                    syncOpen:this.isOpen
                 });
-                this.isOpen = !this.isOpen;
+                this.$store.commit('isOpen',{
+                    isOpen:!this.$store.state.isOpen
+                });
             }
         }
     },
@@ -76,9 +81,6 @@ export default {
                 left:this.$store.state.positionX - this.old_x + "px",
                 top:this.$store.state.positionY - this.old_y + "px"
             }
-        },
-        isShow(){
-            return this.$store.state.isOpen;
         },
         subPosition(){
             return{
@@ -138,7 +140,6 @@ export default {
 #main{
     position: fixed;
     /* border: 1px blueviolet solid; */
-    transition: transform 1s;
     text-align: center;
     line-height: 4em;
     border-radius: 2em;
@@ -153,7 +154,7 @@ export default {
     position: absolute;
     /* border: 1px blueviolet solid; */
     text-align: center;
-    transition:height 1s , width 1s , transform 1s;
+    transition: transform 1s;
     border-radius: 1em;
     width: 2em;
     height: 2em;

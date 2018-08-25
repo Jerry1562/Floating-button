@@ -29,6 +29,9 @@ export default {
       this.$store.commit('isDown',{
         isDown:false
       });
+      this.$store.commit('isOpen',{
+        isOpen:false
+      });
     }
   }
 }
